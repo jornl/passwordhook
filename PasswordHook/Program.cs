@@ -1,4 +1,8 @@
-﻿
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.IO;
+
 namespace PasswordHook
 {
     class Program
@@ -12,65 +16,18 @@ namespace PasswordHook
             }
 
             string wordListPath = args[0];
-
             if (!File.Exists(wordListPath))
             {
-                Console.WriteLine("Word list file not found.");
-                return;
+                throw new FileNotFoundException("Word list file not found.", wordListPath);
             }
 
             if (!(wordListPath.EndsWith(".txt", StringComparison.OrdinalIgnoreCase)
                 || wordListPath.EndsWith(".csv", StringComparison.OrdinalIgnoreCase)))
             {
-                Console.WriteLine("Word list file must be a .txt or .csv file.");
-                return;
+                throw new FormatException("Word list file must be a .txt or .csv file.");
             }
 
-            var wordList = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase);
-
-            try
-            {
-                string[] lines = File.ReadAllLines(wordListPath);
-
-                foreach (string line in lines)
-                {
-                    if (string.IsNullOrWhiteSpace(line))
-                    {
-                        continue;
-                    }
-                    string[] parts = line.Split(',');
-                    if (parts.Length != 2)
-                    {
-                        Console.WriteLine($"Invalid line format: {line} (should be word,value).");
-                        return;
-                    }
-
-                    string word = parts[0].Trim();
-                    if (int.TryParse(parts[1], out int numericValue) == false)
-                    {
-                        Console.WriteLine($"Invalid value format: {parts[1]} for {word} (should be a numeric value).");
-                        return;
-                    }
-
-                    if (wordList.ContainsKey(word))
-                    {
-                        continue;
-                    }
-
-
-                    wordList.Add(word, numericValue);
-                }
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine("Error reading word list file: " + e.Message);
-                return;
-            }
-
-            foreach (var pair in wordList)
-            {
-                Console.WriteLine($"Word: {pair.Key}, value: {pair.Value}");
-            }
+            var wordList = new WordList(wordListPath).wordList;
 
             if (wordList.TryGetValue(args[1], out int value))
             {
