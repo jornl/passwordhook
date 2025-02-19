@@ -35,14 +35,12 @@ namespace PasswordHook
             // Print the result
             Console.WriteLine($"Score for '{args[1]}' = {score}");
 
-            if (wordList.TryGetValue(args[1], out int value))
+            if (score >= 10)
             {
-                Console.WriteLine("");
-                Console.WriteLine($"Found the word {args[1]} in the list, its value: {value}");
-            }
-            else
-            {
-                Console.WriteLine($"Word {args[1]} not found in word list.");
+                // Change the password.
+                Environment.Exit(0);
+            } else {
+                Environment.Exit(1);
             }
         }
         public static int CalculateScore(string input, Dictionary<string, int> wordList)
