@@ -1,5 +1,3 @@
-using System.Dynamic;
-
 namespace PasswordHook
 {
     public class WordList

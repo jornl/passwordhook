@@ -1,15 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.IO;
-
-namespace PasswordHook
+﻿namespace PasswordHook
 {
     class Program
     {
         static void Main(string[] args)
         {
-            if (args.Length != 2)
+            if (args.Length != 3)
             {
                 Console.WriteLine(Utility.PrintUsage());
                 return;
@@ -30,10 +25,10 @@ namespace PasswordHook
             var wordList = new WordList(wordListPath).wordList;
 
             // Now calculate the score
-            int score = CalculateScore(args[1], wordList);
+            int score = CalculateScore(args[2], wordList);
 
             // Print the result
-            Console.WriteLine($"Score for '{args[1]}' = {score}");
+            Console.WriteLine($"Score for '{args[2]}' = {score}");
 
             if (score >= 10)
             {
